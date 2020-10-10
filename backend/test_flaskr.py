@@ -18,6 +18,14 @@ class TriviaTestCase(unittest.TestCase):
         self.database_path = "postgres://{}/{}".format('localhost:5432', self.database_name)
         setup_db(self.app, self.database_path)
 
+        # sample question
+        self.new_question = {
+            'question': 'Q1',
+            'answer': 'A1',
+            'categroy': 3,
+            'difficulty': 2
+        }
+
         # binds the app to the current context
         with self.app.app_context():
             self.db = SQLAlchemy()
@@ -33,7 +41,23 @@ class TriviaTestCase(unittest.TestCase):
     TODO
     Write at least one test for each test for successful operation and for expected errors.
     """
+    def test_get_categories(self):
+        res = self.client.get('/categories')
+        data = json.loads(res.data)
+        self.assertEqual(res.status.code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['categories'])
+        self.assertEqual(data['total_questions'])
 
+    def test_get_questions(self):
+        res = self.client.get('/questions')
+        data = json.loads(res.data)
+        self.assertEqual(res.status.code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['questions'])
+        self.assertEqual(data['total_questions'])
+        self.assertEqual(data['categories'])
+        self.assertEqual(data['current_categories'])
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
