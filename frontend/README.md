@@ -1,52 +1,5 @@
 # Full Stack Trivia API  Frontend
 
-My doc part - START
-
-## API Reference
-
-#### Endpoints
-
-GET /categories
-
-- General: returns all categories in the database
-- Sample: ```bash curl http://127.0.0.1:5000/categories ```
-
-```
-{
-  "categories": [
-    {
-      "id": 1, 
-      "type": "Science"
-    }, 
-    {
-      "id": 2, 
-      "type": "Art"
-    }, 
-    {
-      "id": 3, 
-      "type": "Geography"
-    }, 
-    {
-      "id": 4, 
-      "type": "History"
-    }, 
-    {
-      "id": 5, 
-      "type": "Entertainment"
-    }, 
-    {
-      "id": 6, 
-      "type": "Sports"
-    }
-  ], 
-  "success": true, 
-  "total_categories": 6
-}
-
-```
-
-My doc part - END
-
 ## Getting Setup
 
 > _tip_: this frontend is designed to work with [Flask-based Backend](../backend). It is recommended you stand up the backend first, test using Postman or curl, update the endpoints in the frontend, and then the frontend should integrate smoothly.

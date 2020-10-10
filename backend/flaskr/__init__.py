@@ -8,6 +8,15 @@ from models import setup_db, Question, Category
 
 QUESTIONS_PER_PAGE = 10
 
+def questions_pagination(request, questions):
+  page = request.args.get('page', 1, type=int)
+  start = (page - 1) * QUESTIONS_PER_PAGE
+  end = start + QUESTIONS_PER_PAGE
+  question_collection = [question.format() for question in questions]
+  current_questions = question_collection[start:end]
+
+  return current_questions
+
 def create_app(test_config=None):
   # create and configure the app
   app = Flask(__name__)
@@ -38,21 +47,46 @@ def create_app(test_config=None):
     # format the data to return to the FE 'id' & 'type'
     categories_to_render = [category.format() for category in categories]
 
-    # return the JSON object to the FE to render
+    # return JSON object with 'Key' names typical to the ones in the Front-end (to be rendered)
     return jsonify ({
       'success': True,
       'categories': categories_to_render,
       'total_categories': len(Category.query.all())
     })
+  
+  '''
+  endpoint to handle GET requests for questions, including pagination (every 10 questions). 
+  This endpoint returns a list of questions, number of total questions, current category, categories.
+  '''
+  @app.route('/questions')
+  def get_questions():
 
+    # get all quesitons and paginate them
+    questions_collection = Question.query.order_by(Question.category).all()
+    current_questions = questions_pagination(request, questions_collection)
+
+    # throw an error if there's no quesitons
+    if len(current_questions) == 0:
+      abort(404)
+    
+    # get all categories and add to a dict (category_types)
+    category_collection = Category.query.order_by(Category.id).all()
+    category_types = {}
+
+    for item in category_collection:
+      category_types[item.id] = item.type
+
+    # return JSON object with 'Key' names typical to the ones in the Front-end (to be rendered)
+    return jsonify({
+      'success': True,
+      'questions': current_questions,
+      'total_questions': len(Question.query.all()),
+      'categories': 'Selected all Categories',
+      'current_category': category_types
+    })
 
   '''
-  @TODO: 
-  Create an endpoint to handle GET requests for questions, 
-  including pagination (every 10 questions). 
-  This endpoint should return a list of questions, 
-  number of total questions, current category, categories. 
-
+  @TODO:  
   TEST: At this point, when you start the application
   you should see questions and categories generated,
   ten questions per page and pagination at the bottom of the screen for three pages.
