@@ -25,11 +25,25 @@ def create_app(test_config=None):
 
     return response
 
-  '''
-  @TODO: 
-  Create an endpoint to handle GET requests 
-  for all available categories.
-  '''
+  # endpoint to handle GET requests for all available categories
+  @app.route('/categories')
+  def get_categories():
+    # get all categories ordered by category Id
+    categories = Category.query.order_by(Category.id).all()
+
+    # if there was no available categories then return 404 'not found'
+    if len(categories) == 0:
+      abort(404)
+
+    # format the data to return to the FE 'id' & 'type'
+    categories_to_render = [category.format() for category in categories]
+
+    # return the JSON object to the FE to render
+    return jsonify ({
+      'success': True,
+      'categories': categories_to_render,
+      'total_categories': len(Category.query.all())
+    })
 
 
   '''
