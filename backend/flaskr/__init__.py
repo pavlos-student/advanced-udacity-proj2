@@ -45,7 +45,7 @@ def create_app(test_config=None):
       abort(404)
 
     # format the data to return to the FE 'id' & 'type'
-    categories_to_render = [category.format() for category in categories]
+    categories_to_render = {category.id: category.type for category in categories}
 
     # return JSON object with 'Key' names typical to the ones in the Front-end (to be rendered)
     return jsonify ({
@@ -86,27 +86,52 @@ def create_app(test_config=None):
     })
 
   '''
-  @TODO:  
-  TEST: At this point, when you start the application
-  you should see questions and categories generated,
-  ten questions per page and pagination at the bottom of the screen for three pages.
-  Clicking on the page numbers should update the questions. 
-  '''
-
-  '''
   @TODO: 
   Create an endpoint to DELETE question using a question ID. 
 
   TEST: When you click the trash icon next to a question, the question will be removed.
   This removal will persist in the database and when you refresh the page. 
-  '''
+  '''  
+
+  # an endpoint to POST a new question, requires the question and answer text, category, and difficulty score.
+  @app.route('/questions', methods=['POST'])
+  def create_question():
+    # get JSON from FE user inputs request
+    body = request.get_json()
+
+    if not ('question' in body and 'answer' in body and 'difficulty' in body and 'category' in body):
+      abort(422)
+
+    # collecting the data from the JSON body (user inputs)
+    question = body.get('question')
+    answer = body.get('answer')
+    category = body.get('category')
+    difficulty = body.get('difficulty')
+    # search = body.get('searchTerm')
+
+    # TODO: include a condition related to the search functionality
+
+    # if any of the user data is missing then throw a bad request exception
+    if not question or not answer or not category or not difficulty:
+      abort(400)
+
+    try:
+      # construct question from the Question Model using the FE user inputs
+      question = Question(question=question, answer=answer, difficulty=difficulty, category=category)
+
+      # insert: add & commit data to the db
+      question.insert()
+
+      # return JSON object with 'Key' names typical to the ones in the Front-end (to be rendered)
+      return jsonify({
+        'success': True,
+        'question': question.format()
+      })
+    except:
+      # throw an unprocessable entity exception
+      abort(422)
 
   '''
-  @TODO: 
-  Create an endpoint to POST a new question, 
-  which will require the question and answer text, 
-  category, and difficulty score.
-
   TEST: When you submit a question on the "Add" tab, 
   the form will clear and the question will appear at the end of the last page
   of the questions list in the "List" tab.  
