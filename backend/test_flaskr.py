@@ -20,10 +20,10 @@ class TriviaTestCase(unittest.TestCase):
 
         # sample question
         self.new_question = {
-            'question': 'Q1',
-            'answer': 'A1',
-            'categroy': 3,
-            'difficulty': 2
+            'question': 'Q',
+            'answer': 'A',
+            'difficulty': '2',
+            'category': '3'
         }
 
         # binds the app to the current context
@@ -41,23 +41,49 @@ class TriviaTestCase(unittest.TestCase):
     TODO
     Write at least one test for each test for successful operation and for expected errors.
     """
+    # Test GET /categories
     def test_get_categories(self):
-        res = self.client.get('/categories')
+        res = self.client().get('/categories')
         data = json.loads(res.data)
-        self.assertEqual(res.status.code, 200)
+        
+        # check status code and success message
+        self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
-        self.assertEqual(data['categories'])
-        self.assertEqual(data['total_questions'])
+        
+        # check if categories exist
+        self.assertTrue(len(data['categories']))
 
+    # Test GET /questions
     def test_get_questions(self):
-        res = self.client.get('/questions')
+        res = self.client().get('/questions')
         data = json.loads(res.data)
-        self.assertEqual(res.status.code, 200)
+
+        # check status code and success message
+        self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
-        self.assertEqual(data['questions'])
-        self.assertEqual(data['total_questions'])
-        self.assertEqual(data['categories'])
-        self.assertEqual(data['current_categories'])
+
+        # check if questions exist & if their total number is set
+        self.assertTrue(len(data['questions']))
+        self.assertTrue(data['total_questions'])
+        
+    # Test POST /questions 
+    def test_create_question(self):
+        # get number of questions before post
+        questions_before_post = Question.query.all()
+
+        # create a new question and load its response data
+        response = self.client().post('/questions', json=self.new_question)
+        data = json.loads(response.data)
+
+        # get number of questions after post
+        questions_after_post = Question.query.all()
+
+        # check status code and success message
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+
+        # check if one more question after post
+        self.assertTrue(len(questions_after_post) - len(questions_before_post) == 1)
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
