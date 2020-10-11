@@ -106,6 +106,18 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['deleted'], question_id)
         self.assertTrue(len(questions_before_delete) - len(questions_after_delete) == 1)
         self.assertEqual(question, None)
+    
+    #  Test POST /questions/search
+    def test_search_questions(self):
+        # perform post request with search term 'searchTerm', load response data
+        response = self.client().post('/questions/search', json={'searchTerm': 'taj'})
+        data = json.loads(response.data)
+
+        # check status code & success message
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertIsNotNone(data['questions'])
+        self.assertIsNotNone(data['total_questions'])
 
 # Make the tests conveniently executable
 if __name__ == "__main__":

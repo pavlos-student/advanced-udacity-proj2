@@ -164,6 +164,33 @@ My doc part - START
 }
 ```
 
+### POST /questions/search
+
+- General:
+  - searches for questions with the keyword that the user's input
+  - returns paginated questions
+  
+- Sample URI Request:
+```curl -d '{"searchTerm":"Taj"}' -H "Content-Type: application/json" -X POST localhost:5000/questions/search```
+
+- Sample Response:
+```
+{
+  "current_category": null, 
+  "questions": [
+    {
+      "answer": "Agra", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 15, 
+      "question": "The Taj Mahal is located in which Indian city?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 1
+}
+```
+
 My doc part - END
 
 

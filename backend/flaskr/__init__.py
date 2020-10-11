@@ -54,10 +54,8 @@ def create_app(test_config=None):
       'total_categories': len(Category.query.all())
     })
   
-  '''
-  endpoint to handle GET requests for questions, including pagination (every 10 questions). 
-  This endpoint returns a list of questions, number of total questions, current category, categories.
-  '''
+  # endpoint to handle GET requests for questions, including pagination (every 10 questions). 
+  # This endpoint returns a list of questions, number of total questions, current category, categories.
   @app.route('/questions')
   def get_questions():
 
@@ -123,9 +121,6 @@ def create_app(test_config=None):
     answer = body.get('answer')
     category = body.get('category')
     difficulty = body.get('difficulty')
-    # search = body.get('searchTerm')
-
-    # TODO: include a condition related to the search functionality
 
     # if any of the user data is missing then throw a bad request exception
     if not question or not answer or not category or not difficulty:
@@ -152,11 +147,35 @@ def create_app(test_config=None):
   Create a POST endpoint to get questions based on a search term. 
   It should return any questions for whom the search term 
   is a substring of the question. 
-
-  TEST: Search by any phrase. The questions list will update to include 
-  only question that include that string within their question. 
-  Try using the word "title" to start. 
   '''
+  @app.route('/questions/search', methods=['POST'])
+  def search_question():
+    # get searchTerm from user input
+    body = request.get_json()
+    search_term = body.get('searchTerm', None)
+
+    # if search term exists, then apply the following SQLAlchemy corressponding to this SQL query:
+    # SELECT * FROM questions WHERE question LIKE 'search_term'
+    try:
+      if search_term:
+        queried_questions = Question.query.filter(Question.question.ilike(f'%{search_term}%')).all()
+
+      # return paginated questions
+      patinated_questions = questions_pagination(request, queried_questions)
+
+      return jsonify({
+        'success': True,
+        'questions': patinated_questions,
+        'total_questions': len(queried_questions),
+        'current_category': None
+      })
+    except:
+      abort(404)
+
+  
+  # TEST: Search by any phrase. The questions list will update to include 
+  # only question that include that string within their question. 
+  # Try using the word "title" to start.
 
   '''
   @TODO: 
