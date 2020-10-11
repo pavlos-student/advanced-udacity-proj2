@@ -142,12 +142,6 @@ def create_app(test_config=None):
       # throw an unprocessable entity exception
       abort(422)
 
-  '''
-  @TODO: 
-  Create a POST endpoint to get questions based on a search term. 
-  It should return any questions for whom the search term 
-  is a substring of the question. 
-  '''
   @app.route('/questions/search', methods=['POST'])
   def search_question():
     # get searchTerm from user input
@@ -194,18 +188,6 @@ def create_app(test_config=None):
     except:
       abort(400)
 
-  '''
-  @TODO: 
-  Create a 
-  This endpoint should take category and previous question parameters 
-  and return a random questions within the given category, 
-  if provided, and that is not one of the previous questions. 
-
-  TEST: In the "Play" tab, after a user selects "All" or a category,
-  one question at a time is displayed, the user is allowed to answer
-  and shown whether they were correct or not. 
-  '''
-
   # POST endpoint to get questions to play the quiz
   @app.route('/quizzes', methods=['POST'])
   def play_quiz():
@@ -234,11 +216,37 @@ def create_app(test_config=None):
       except:
         abort(422)
 
-  '''
-  @TODO: 
-  Create error handlers for all expected errors 
-  including 404 and 422. 
-  '''
+  @app.errorhandler(400)
+  def bad_request(error):
+    return jsonify({
+      'success': False,
+      'error': 400,
+      'message': 'Bad Request'
+    }), 400
+
+  @app.errorhandler(404)
+  def not_found(error):
+    return jsonify({
+      'success': False,
+      'error': 404,
+      'message': 'Resource Not Found'
+    }), 404
+
+  @app.errorhandler(422)
+  def unprocessable(error):
+    return jsonify({
+      'success': False,
+      'error': 422,
+      'message': 'Unprocessable request'
+    }), 422
+
+  @app.errorhandler(500)
+  def internal_server_error(error):
+    return jsonify({
+      'success': False,
+      'error': 500,
+      'message': 'Internal Server Error'
+    }), 500
   
   return app
 
