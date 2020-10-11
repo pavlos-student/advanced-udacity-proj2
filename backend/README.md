@@ -130,9 +130,10 @@ My doc part - START
   - creates a new question as per the users' inputs: question, answer, difficulty, and category.
   - returns a sample JSON with the object's id & a success value
 
-- Sample URL request: 
+- Sample URI request: 
 ``` curl -d '{"question":"Q3", "answer":"A3", "category": 3, "difficulty": 3}' -H "Content-Type: application/json" -X POST localhost:5000/questions ```
 
+- Sample Response:
 ```
 {
   "question": {
@@ -142,6 +143,23 @@ My doc part - START
     "id": 26, 
     "question": "Q3"
   }, 
+  "success": true
+}
+```
+
+### DELETE /questions/int:id
+
+- General:
+  - Delete a question by its id (passed as a query parameter)
+  - Returns id of successful deleted question
+
+- Sample URI request:
+```curl -X DELETE localhost:5000/questions/31```
+
+- Sample Response:
+```
+{
+  "deleted": 31, 
   "success": true
 }
 ```
