@@ -2,11 +2,9 @@
 
 My doc part - START
 
-## API Reference
+## API Endpoints' Reference
 
-#### Endpoints
-
-GET /categories
+#### GET /categories
 
 - General: returns all categories in the database
 - Sample URI Request: ``` curl http://127.0.0.1:5000/categories ```
@@ -15,39 +13,20 @@ GET /categories
 
 ```
 {
-  "categories": [
-    {
-      "id": 1, 
-      "type": "Science"
-    }, 
-    {
-      "id": 2, 
-      "type": "Art"
-    }, 
-    {
-      "id": 3, 
-      "type": "Geography"
-    }, 
-    {
-      "id": 4, 
-      "type": "History"
-    }, 
-    {
-      "id": 5, 
-      "type": "Entertainment"
-    }, 
-    {
-      "id": 6, 
-      "type": "Sports"
-    }
-  ], 
+  "categories": {
+    "1": "Science", 
+    "2": "Art", 
+    "3": "Geography", 
+    "4": "History", 
+    "5": "Entertainment", 
+    "6": "Sports"
+  }, 
   "success": true, 
   "total_categories": 6
 }
-
 ```
 
-GET /questions
+#### GET /questions
 
 - General: 
   - returns all questoins in the database
@@ -70,11 +49,11 @@ GET /questions
   }, 
   "questions": [
     {
-      "answer": "Alexander Fleming", 
+      "answer": "A2", 
       "category": 1, 
-      "difficulty": 3, 
-      "id": 21, 
-      "question": "Who discovered penicillin?"
+      "difficulty": 5, 
+      "id": 25, 
+      "question": "Q2"
     }, 
     {
       "answer": "Blood", 
@@ -84,18 +63,18 @@ GET /questions
       "question": "Hematology is a branch of medicine involving the study of what?"
     }, 
     {
+      "answer": "Alexander Fleming", 
+      "category": 1, 
+      "difficulty": 3, 
+      "id": 21, 
+      "question": "Who discovered penicillin?"
+    }, 
+    {
       "answer": "The Liver", 
       "category": 1, 
       "difficulty": 4, 
       "id": 20, 
       "question": "What is the heaviest organ in the human body?"
-    }, 
-    {
-      "answer": "Jackson Pollock", 
-      "category": 2, 
-      "difficulty": 2, 
-      "id": 19, 
-      "question": "Which American artist was a pioneer of Abstract Expressionism, and a leading exponent of action painting?"
     }, 
     {
       "answer": "One", 
@@ -105,11 +84,11 @@ GET /questions
       "question": "How many paintings did Van Gogh sell in his lifetime?"
     }, 
     {
-      "answer": "Escher", 
+      "answer": "A1", 
       "category": 2, 
-      "difficulty": 1, 
-      "id": 16, 
-      "question": "Which Dutch graphic artist\u2013initials M C was a creator of optical illusions?"
+      "difficulty": 3, 
+      "id": 24, 
+      "question": "Q1"
     }, 
     {
       "answer": "Mona Lisa", 
@@ -119,18 +98,18 @@ GET /questions
       "question": "La Giaconda is better known as what?"
     }, 
     {
-      "answer": "The Palace of Versailles", 
-      "category": 3, 
-      "difficulty": 3, 
-      "id": 14, 
-      "question": "In which royal palace would you find the Hall of Mirrors?"
+      "answer": "Escher", 
+      "category": 2, 
+      "difficulty": 1, 
+      "id": 16, 
+      "question": "Which Dutch graphic artist\u2013initials M C was a creator of optical illusions?"
     }, 
     {
-      "answer": "Lake Victoria", 
-      "category": 3, 
+      "answer": "Jackson Pollock", 
+      "category": 2, 
       "difficulty": 2, 
-      "id": 13, 
-      "question": "What is the largest lake in Africa?"
+      "id": 19, 
+      "question": "Which American artist was a pioneer of Abstract Expressionism, and a leading exponent of action painting?"
     }, 
     {
       "answer": "Agra", 
@@ -141,11 +120,31 @@ GET /questions
     }
   ], 
   "success": true, 
-  "total_questions": 19
+  "total_questions": 21
 }
-
 ```
 
+#### POST /questions
+
+- General: 
+  - creates a new question as per the users' inputs: question, answer, difficulty, and category.
+  - returns a sample JSON with the object's id & a success value
+
+- Sample URL request: 
+``` curl -d '{"question":"Q3", "answer":"A3", "category": 3, "difficulty": 3}' -H "Content-Type: application/json" -X POST localhost:5000/questions ```
+
+```
+{
+  "question": {
+    "answer": "A3", 
+    "category": 3, 
+    "difficulty": 3, 
+    "id": 26, 
+    "question": "Q3"
+  }, 
+  "success": true
+}
+```
 
 My doc part - END
 
