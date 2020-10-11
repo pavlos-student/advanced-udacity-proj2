@@ -169,7 +169,7 @@ My doc part - START
 - General:
   - searches for questions with the keyword that the user's input
   - returns paginated questions
-  
+
 - Sample URI Request:
 ```curl -d '{"searchTerm":"Taj"}' -H "Content-Type: application/json" -X POST localhost:5000/questions/search```
 
@@ -189,6 +189,53 @@ My doc part - START
   "success": true, 
   "total_questions": 1
 }
+```
+
+### GET /categories/int:id/questions
+
+- General:
+  - get all questions by category id, passed as the URI parameter
+  - return paginated questions in a JSON object with its info (as in the sample response below)
+
+- Sample URI request:
+``` curl localhost:5000/categories/3/questions ```
+
+- Sample Response:
+```
+{
+  "current_category": "Geography", 
+  "questions": [
+    {
+      "answer": "Lake Victoria", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 13, 
+      "question": "What is the largest lake in Africa?"
+    }, 
+    {
+      "answer": "The Palace of Versailles", 
+      "category": 3, 
+      "difficulty": 3, 
+      "id": 14, 
+      "question": "In which royal palace would you find the Hall of Mirrors?"
+    }, 
+    {
+      "answer": "Agra", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 15, 
+      "question": "The Taj Mahal is located in which Indian city?"
+    }, 
+    {
+      "answer": "A3", 
+      "category": 3, 
+      "difficulty": 3, 
+      "id": 35, 
+      "question": "Q3"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 22
 ```
 
 My doc part - END

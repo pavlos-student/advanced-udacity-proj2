@@ -161,31 +161,44 @@ def create_app(test_config=None):
         queried_questions = Question.query.filter(Question.question.ilike(f'%{search_term}%')).all()
 
       # return paginated questions
-      patinated_questions = questions_pagination(request, queried_questions)
+      paginated_questions = questions_pagination(request, queried_questions)
 
       return jsonify({
         'success': True,
-        'questions': patinated_questions,
+        'questions': paginated_questions,
         'total_questions': len(queried_questions),
         'current_category': None
       })
     except:
       abort(404)
 
-  
-  # TEST: Search by any phrase. The questions list will update to include 
-  # only question that include that string within their question. 
-  # Try using the word "title" to start.
-
   '''
-  @TODO: 
-  Create a GET endpoint to get questions based on category. 
-
   TEST: In the "List" tab / main screen, clicking on one of the 
   categories in the left column will cause only questions of that 
   category to be shown. 
   '''
 
+  # a GET endpoint to get questions based on category.
+  @app.route('/categories/<int:category_id>/questions')
+  def get_questons_by_category(category_id):
+    # Get category by id
+    queried_category = Category.query.filter_by(id=category_id).one_or_none()
+
+    try:
+      # get questions matching the queried category, order by question id
+      queried_questions = Question.query.filter(Question.category==category_id).order_by(Question.id).all()
+
+      # return paginated questions
+      paginated_questions = questions_pagination(request, queried_questions)
+
+      return jsonify({
+        'success': True,
+        'questions': paginated_questions,
+        'total_questions': len(Question.query.all()),
+        'current_category': queried_category.type
+      })
+    except:
+      abort(400)
 
   '''
   @TODO: 
