@@ -85,6 +85,28 @@ class TriviaTestCase(unittest.TestCase):
         # check if one more question after post
         self.assertTrue(len(questions_after_post) - len(questions_before_post) == 1)
 
+    # Test DELETE /questions/{id}
+    def test_delete_question(self):
+        question = Question(question="Q", answer='A', category=1, difficulty=1)
+        question.insert()
+        question_id = question.id
+        print('question: ', question, ' question id: ', question_id)
+
+        questions_before_delete = Question.query.all()
+
+        response = self.client().delete('/questions/{}'.format(question_id))
+        data = json.loads(response.data)
+        print('response: ', response, ' data :', data)
+
+        questions_after_delete = Question.query.all()
+        question = Question.query.filter(Question.id == question_id).one_or_none()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['deleted'], question_id)
+        self.assertTrue(len(questions_before_delete) - len(questions_after_delete) == 1)
+        self.assertEqual(question, None)
+
 # Make the tests conveniently executable
 if __name__ == "__main__":
     unittest.main()

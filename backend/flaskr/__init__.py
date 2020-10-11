@@ -85,13 +85,29 @@ def create_app(test_config=None):
       'current_category': category_types
     })
 
-  '''
-  @TODO: 
-  Create an endpoint to DELETE question using a question ID. 
+  
+  # an endpoint to DELETE question using a question ID
+  @app.route('/questions/<int:question_id>', methods=['DELETE'])
+  def delete_quesiton(question_id):
+    try:
+      # retrieve the question from db by id, get only one result
+      question = Question.query.filter_by(id=question_id).one_or_none()
+      
+      # throw exception NOT_FOUND if the id doesn't exist
+      if question_id is None:
+        abort(404)
+      
+      question.delete()
 
-  TEST: When you click the trash icon next to a question, the question will be removed.
-  This removal will persist in the database and when you refresh the page. 
-  '''  
+      # return the id of the question deleted &  msg stating that it was successfully deleted
+      return jsonify({
+        'success': True,
+        'deleted': question_id
+      })
+    except:
+      # abort, if a problem occurred while deleting the question
+      abort(422)
+
 
   # an endpoint to POST a new question, requires the question and answer text, category, and difficulty score.
   @app.route('/questions', methods=['POST'])
@@ -130,12 +146,6 @@ def create_app(test_config=None):
     except:
       # throw an unprocessable entity exception
       abort(422)
-
-  '''
-  TEST: When you submit a question on the "Add" tab, 
-  the form will clear and the question will appear at the end of the last page
-  of the questions list in the "List" tab.  
-  '''
 
   '''
   @TODO: 
