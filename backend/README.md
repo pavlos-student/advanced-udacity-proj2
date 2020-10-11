@@ -238,6 +238,30 @@ My doc part - START
   "total_questions": 22
 ```
 
+### POST /quizzes
+
+- General:
+  - user plays a game answering random questions
+  - uses the user's chosen category & previous question
+  - retruns a random, unseen, question info to be rendered to the user
+
+- Sample URI Request:
+```curl -d '{"previous_questions":[],"quiz_category":{"type":"Science","id":"1"}}' -H "Content-Type: application/json" -X POST localhost:5000/quizzes ```
+
+- Sample Response:
+```
+{
+  "question": {
+    "answer": "A1", 
+    "category": 1, 
+    "difficulty": 1, 
+    "id": 33, 
+    "question": "Q1"
+  }, 
+  "success": true
+}
+```
+
 My doc part - END
 
 

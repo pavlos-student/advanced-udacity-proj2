@@ -172,12 +172,6 @@ def create_app(test_config=None):
     except:
       abort(404)
 
-  '''
-  TEST: In the "List" tab / main screen, clicking on one of the 
-  categories in the left column will cause only questions of that 
-  category to be shown. 
-  '''
-
   # a GET endpoint to get questions based on category.
   @app.route('/categories/<int:category_id>/questions')
   def get_questons_by_category(category_id):
@@ -202,7 +196,7 @@ def create_app(test_config=None):
 
   '''
   @TODO: 
-  Create a POST endpoint to get questions to play the quiz. 
+  Create a 
   This endpoint should take category and previous question parameters 
   and return a random questions within the given category, 
   if provided, and that is not one of the previous questions. 
@@ -211,6 +205,34 @@ def create_app(test_config=None):
   one question at a time is displayed, the user is allowed to answer
   and shown whether they were correct or not. 
   '''
+
+  # POST endpoint to get questions to play the quiz
+  @app.route('/quizzes', methods=['POST'])
+  def play_quiz():
+      try:
+        # get the data from the user input
+        body = request.get_json()
+
+        # get category & previous question from the user input
+        category = body.get('quiz_category')
+        previous_questions = body.get('previous_questions')
+
+        # If 'ALL' button link, for all categories, is clicked, will filter from all questions that were not in the previous question
+        if category['type'] == 'click':
+            available_questions = Question.query.filter(Question.id.notin_((previous_questions))).all()
+        # Filter by category & not viewed before questions
+        else:
+            available_questions = Question.query.filter_by(category=category['id']).filter(Question.id.notin_((previous_questions))).all()
+
+        # randomly select next question from available questions
+        new_question = available_questions[random.randrange(0, len(available_questions))].format() if len(available_questions) > 0 else None
+
+        return jsonify({
+            'success': True,
+            'question': new_question
+        })
+      except:
+        abort(422)
 
   '''
   @TODO: 
